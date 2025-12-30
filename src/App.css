@@ -1,0 +1,154 @@
+/* Custom Student-Style Variables */
+:root {
+  --geu-red: #e31e24;
+  --text-main: #1a1a1a;
+  --text-gray: #555;
+  --nav-blur-bg: rgba(255, 255, 255, 0.75);
+}
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: #fff;
+  width: 100%;
+}
+
+/* --- Fixed Navbar with Glass Effect --- */
+.navbar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 5%;
+  background: var(--nav-blur-bg);
+  backdrop-filter: blur(15px);
+  border-bottom: 0.8px solid rgba(0, 0, 0, 0.05);
+}
+
+.tbi-logo {
+  height: 55px;
+}
+
+.pill-menu {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 8px 25px;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.pill-menu li a {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-gray);
+  transition: 0.3s;
+}
+
+.pill-menu li a.active, .pill-menu li a:hover {
+  color: var(--geu-red);
+}
+
+.journey-btn {
+  background: var(--geu-red);
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* --- Full-Screen Hero Section --- */
+.hero-container {
+  padding-top: 120px; /* Space for the fixed navbar */
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-main-box {
+  width: 90%;
+  max-width: 1440px;
+  background-color: #fcfcfc;
+  border: 1px solid #f2f2f2;
+  border-radius: 40px;
+  padding: 60px 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.hero-content {
+  flex: 1;
+}
+
+.hero-title {
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text-main);
+  margin-bottom: 24px;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--text-gray);
+  margin-bottom: 35px;
+  max-width: 550px;
+}
+
+.hero-btn-group {
+  display: flex;
+  gap: 15px;
+}
+
+.btn-primary {
+  background: var(--geu-red);
+  color: #fff;
+  border: none;
+  padding: 18px 36px;
+  border-radius: 50px;
+  font-weight: 700;
+}
+
+.btn-secondary {
+  background: #fff;
+  color:#1a1a1a;
+  border: 1px solid #ddd;
+  padding: 18px 36px;
+  border-radius: 50px;
+  font-weight: 700;
+}
+
+.hero-illustration img {
+  width: 100%;
+  max-width: 500px;
+}
+
+/* --- Simple Responsive Tweak --- */
+@media (max-width: 1024px) {
+  .pill-menu { display: none; }
+  .hero-main-box {
+    flex-direction: column;
+    text-align: center;
+    padding: 60px 30px;
+  }
+  .hero-title { font-size: 42px; }
+}
