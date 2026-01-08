@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Navbar = ({ setView, currentView }) => {
+const Navbar = ({ currentView, toggleSidebar }) => {
   const links = ["Home", "About", "Incubation", "Events", "Skill Development", "Resources", "Community", "Careers", "Contact"];
 
   return (
     <nav className="navbar-wrapper">
-      <div className="logo-area" onClick={() => window.location.hash = 'home'} style={{ cursor: 'pointer' }}>
+      <div className="logo-area" onClick={toggleSidebar} style={{ cursor: 'pointer' }}>
         <img src="/logo.png" alt="TBI Logo" className="tbi-logo" />
       </div>
 

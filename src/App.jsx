@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/navbar';
+import Sidebar from './components/sidebar';
 import About from './components/about';
+import Dashboard from './admin/dashboard';
 import './App.css';
 
 function App() {
   const [view, setView] = useState(
     window.location.hash.slice(1) || 'home'
   );
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -62,6 +65,10 @@ function App() {
       return <About />;
     }
 
+    if (view === 'dashboard') {
+      return <Dashboard />;
+    }
+
     return (
       <div style={{ textAlign: 'center', padding: '100px 20px' }}>
         <h1 style={{ fontSize: '48px', fontWeight: '800' }}>
@@ -76,7 +83,8 @@ function App() {
 
   return (
     <div className="site-container">
-      <Navbar setView={setView} currentView={view} />
+      <Navbar setView={setView} currentView={view} toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} setView={setView} />
 
       {/* neutral wrapper */}
       <main className="main-container">

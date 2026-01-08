@@ -30,21 +30,23 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 5%;
-  background: var(--nav-blur-bg);
-  backdrop-filter: blur(15px);
-  border-bottom: 0.8px solid rgba(0, 0, 0, 0.05);
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
 }
 
 .tbi-logo {
-  height: 55px;
+  height: 75px;
 }
 
 .pill-menu {
   display: flex;
   list-style: none;
   gap: 20px;
-  background: #fff;
-  border: 1px solid #eee;
+  background: var(--nav-blur-bg);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   padding: 8px 25px;
   border-radius: 50px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
@@ -85,13 +87,115 @@ body {
 }
 
 .journey-btn {
-  background: var(--geu-red);
+  background: rgba(227, 30, 36, 0.8);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(227, 30, 36, 0.2);
   color: #fff;
-  border: none;
   padding: 12px 25px;
   border-radius: 50px;
   font-weight: 700;
   cursor: pointer;
+}
+
+/* --- Sidebar Styles --- */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 2000;
+  display: flex;
+}
+
+.sidebar {
+  width: 280px;
+  height: 100%;
+  background: #ffffff;
+  border-right: 1px solid #e5e5e5;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.sidebar-close {
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.sidebar-close:hover {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.sidebar-close:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(227, 30, 36, 0.3);
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 16px 0;
+  margin: 0;
+}
+
+.sidebar-link {
+  display: block;
+  width: 100%;
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-gray);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+  outline: none;
+}
+
+.sidebar-link:hover {
+  background: #f8f8f8;
+  color: var(--geu-red);
+  border-left-color: var(--geu-red);
+}
+
+.sidebar-link:focus {
+  outline: none;
+  background: #f8f8f8;
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px rgba(227, 30, 36, 0.2);
 }
 
 /* --- Full-Screen Hero Section --- */
@@ -366,3 +470,211 @@ body {
   padding-left: 0;
   padding-right: 0;
 }
+
+/* Animation Keyframes */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Animation Classes */
+.animate-left {
+  animation: slideInLeft 1s ease-out;
+}
+
+.animate-right {
+  animation: slideInRight 1s ease-out;
+}
+
+.animate-bottom {
+  animation: slideInBottom 1s ease-out;
+}
+
+.about-section-divider {
+  max-width: 1100px;          /* SAME as .section-wrapper */
+  margin: 0 auto 60px auto;   /* SAME horizontal centering */
+  padding: 0 40px;            /* MATCHES section-wrapper padding */
+}
+
+.about-section-divider-inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.about-section-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.about-section-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.25);
+  transform: translateY(2px); /* centers line visually with text */
+}
+
+/* --- COMPLETE DASHBOARD REDESIGN --- */
+
+#DASHBOARD-STRICT-SCOPE {
+  width: 100% !important;
+  min-height: 100vh !important;
+  background-color: #f4f7f6 !important;
+  display: flex !important;
+  justify-content: center !important; /* HORIZONTAL CENTER */
+  align-items: flex-start !important;
+  padding: 120px 20px 60px 20px !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.DASHBOARD-MAIN-CONTAINER {
+  width: 100% !important;
+  max-width: 1100px !important; /* SPREAD OUT */
+  margin: 0 auto !important; /* CENTERED */
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.DASHBOARD-HEADER {
+  text-align: center !important;
+  margin-bottom: 50px !important;
+}
+
+.DASHBOARD-H1 {
+  font-size: 52px !important;
+  font-weight: 900 !important;
+  color: #111 !important;
+  margin: 0 !important;
+}
+
+.DASHBOARD-P {
+  font-size: 18px !important;
+  color: #666 !important;
+  margin-top: 10px !important;
+}
+
+.DASHBOARD-CARD {
+  width: 100% !important;
+  background: white !important;
+  padding: 40px !important;
+  border-radius: 25px !important;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.05) !important;
+  border: 1px solid #eee !important;
+  margin-bottom: 30px !important;
+}
+
+.DASHBOARD-LABEL {
+  font-size: 14px !important;
+  letter-spacing: 2px !important;
+  color: #e31e24 !important;
+  border-bottom: 2px solid #f9f9f9 !important;
+  padding-bottom: 15px !important;
+  margin-bottom: 30px !important;
+}
+
+.DASHBOARD-GRID {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important; /* TWO COLUMNS SPREAD */
+  gap: 20px !important;
+}
+
+.DASHBOARD-INPUT {
+  width: 100% !important;
+  padding: 18px !important;
+  border: 2px solid #f0f0f0 !important;
+  border-radius: 12px !important;
+  font-size: 16px !important;
+  color: #111 !important;
+  background: #fafafa !important;
+}
+
+.DASHBOARD-SUBMIT-BTN {
+  display: block !important;
+  margin: 30px auto 0 auto !important;
+  padding: 18px 50px !important;
+  background: #e31e24 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 50px !important;
+  font-weight: 800 !important;
+  cursor: pointer !important;
+}
+
+.DASHBOARD-ROW {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 20px !important;
+  background: #fbfbfb !important;
+  border-radius: 15px !important;
+  margin-bottom: 10px !important;
+  border: 1px solid #eee !important;
+}
+
+.DASHBOARD-ROW-LEFT {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.DASHBOARD-ROW-LEFT img {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  margin-right: 20px !important;
+}
+
+.DASHBOARD-INFO strong {
+  display: block !important;
+  font-size: 18px !important;
+  color: #111 !important;
+}
+
+.DASHBOARD-INFO span {
+  font-size: 14px !important;
+  color: #777 !important;
+}
+
+.DASHBOARD-ACTIONS button {
+  padding: 10px 20px !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  margin-left: 10px !important;
+  border: 1px solid #ddd !important;
+  background: white !important;
+}
+
+.DELETE-BTN:hover { color: #e31e24 !important; border-color: #e31e24 !important; }
