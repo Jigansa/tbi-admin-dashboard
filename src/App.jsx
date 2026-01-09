@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/navbar';
 import Sidebar from './components/sidebar';
 import About from './components/about';
-import Dashboard from './admin/dashboard';
+import Dashboard from './admin/dashboard-about';
 import './App.css';
 
 function App() {
@@ -66,6 +66,10 @@ function App() {
     }
 
     if (view === 'dashboard') {
+      return <Dashboard />;
+    }
+
+    if (view === 'dashboard-about') {
       return <Dashboard />;
     }
 

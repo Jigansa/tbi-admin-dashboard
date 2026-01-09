@@ -3,9 +3,7 @@ import React from "react";
 function About() {
   return (
     <>
-      {/* =============================
-          HERO / VISION / MISSION
-         ============================= */}
+      {}
       <section className="hero-container about-hero-clean">
         <div className="hero-main-box">
           <div className="about1-inner">

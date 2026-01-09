@@ -7,8 +7,7 @@ const Dashboard = () => {
   });
 
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ name: "", title: "", photo: "" });
-
+  const [form, setForm] = useState({ name: "", title: "", photo: "", gmail: "", linkedin: "" });
   const saveTeam = (newTeam) => {
     setTeam(newTeam);
     localStorage.setItem("team", JSON.stringify(newTeam));
@@ -22,12 +21,12 @@ const Dashboard = () => {
     } else {
       saveTeam([...team, { ...form, id: Date.now() }]);
     }
-    setForm({ name: "", title: "", photo: "" });
+    setForm({ name: "", title: "", photo: "", gmail: "", linkedin: "" });
   };
 
   const handleEdit = (m) => {
     setEditing(m.id);
-    setForm({ name: m.name, title: m.title, photo: m.photo });
+    setForm({ name: m.name, title: m.title, photo: m.photo, gmail: m.gmail || "", linkedin: m.linkedin || "" });
   };
 
   const handleDelete = (id) => {
@@ -48,16 +47,16 @@ const Dashboard = () => {
         /* FORCED INDEPENDENT LAYOUT */
         .admin-fullscreen-layer {
           position: fixed !important;
-          top: 0 !important;
+          top: 120px !important;
           left: 0 !important;
           width: 100vw !important;
-          height: 100vh !important;
+          height: calc(100vh - 120px) !important;
           background-color: #f8f9fa !important;
           overflow-y: auto !important;
           z-index: 2000 !important; /* Ensures it sits above your existing hero layouts */
           display: flex !important;
           justify-content: center !important;
-          padding-top: 120px !important;
+          padding-top: 0 !important;
         }
 
         .admin-content-hub {
@@ -231,20 +230,46 @@ const Dashboard = () => {
             <span className="section-tag">{editing ? "Modify Member" : "Add New Member"}</span>
             <form onSubmit={handleSubmit}>
               <div className="form-grid-layout">
-                <input
-                  className="styled-input"
-                  placeholder="Full Name"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  required
-                />
-                <input
-                  className="styled-input"
-                  placeholder="Professional Title"
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  required
-                />
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', color: '#333' }}>Name</label>
+                  <input
+                    className="styled-input"
+                    placeholder="e.g. Ajay Sharma"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    required
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', color: '#333' }}>Professional Title</label>
+                  <input
+                    className="styled-input"
+                    placeholder="e.g. CEO & Founder"
+                    value={form.title}
+                    onChange={(e) => setForm({ ...form, title: e.target.value })}
+                    required
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', color: '#333' }}>Gmail</label>
+                  <input
+                    className="styled-input"
+                    placeholder="e.g. ajay.sharma@example.com"
+                    value={form.gmail}
+                    onChange={(e) => setForm({ ...form, gmail: e.target.value })}
+                    required
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', color: '#333' }}>LinkedIn Link</label>
+                  <input
+                    className="styled-input"
+                    placeholder="e.g. https://linkedin.com/in/ajaysharma"
+                    value={form.linkedin}
+                    onChange={(e) => setForm({ ...form, linkedin: e.target.value })}
+                    required
+                  />
+                </div>
               </div>
 
               <div className="upload-container">
