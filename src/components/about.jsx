@@ -1,13 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 
 function About() {
+  const [coreTeam, setCoreTeam] = useState([]);
+
+  useEffect(() => {
+    const fetchCoreTeam = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "coreteam"));
+        const data = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setCoreTeam(data);
+      } catch (err) {
+        console.error("Error fetching core team:", err);
+      }
+    };
+
+    fetchCoreTeam();
+  }, []);
+
   return (
     <>
-      {}
+      {/* =============================
+          HERO SECTION
+         ============================= */}
       <section className="hero-container about-hero-clean">
         <div className="hero-main-box">
           <div className="about1-inner">
-            
+
             {/* LEFT */}
             <div className="about1-left animate-left">
               <h1 className="about1-title">
@@ -84,10 +107,7 @@ function About() {
         >
           Founded in 2010 as the Entrepreneurship Development Cell (EDC), TBI-GEU
           has evolved into a cornerstone of entrepreneurial support in
-          Uttarakhand. In 2015, we became the official Technology Business
-          Incubator (TBI) under the Department of Science and Technology,
-          Government of India. In 2018, we became the first nodal agency
-          recognized by Startup Uttarakhand.
+          Uttarakhand.
         </p>
 
         <p
@@ -137,7 +157,88 @@ function About() {
         </div>
       </section>
 
-      {/* Team grid will come HERE later */}
+    {/* =============================
+    TEAM GRID (FIREBASE)
+   ============================= */}
+<section className="team-section">
+  <div className="team-grid">
+
+    {/* HEAD CARD */}
+    {coreTeam[0] && (
+      <div className="team-card team-head-card">
+        <img
+          src={coreTeam[0].imageUrl}
+          alt={coreTeam[0].name}
+          className="team-image"
+        />
+
+        <div className="team-content">
+          <h3 className="team-name">{coreTeam[0].name}</h3>
+          <p className="team-role">{coreTeam[0].role}</p>
+
+          <div className="team-links">
+            {coreTeam[0].email && (
+              <a
+                href={`mailto:${coreTeam[0].email}`}
+                className="team-link email"
+                aria-label="Email"
+              />
+            )}
+            {coreTeam[0].linkedin && (
+              <a
+                href={coreTeam[0].linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="team-link linkedin"
+                aria-label="LinkedIn"
+              />
+            )}
+          </div>
+        </div>
+      </div>
+    )}
+
+    {/* SLIDING MEMBERS (3 AT A TIME) */}
+    <div className="team-slider">
+      {coreTeam.slice(1).map(member => (
+        <div className="team-card team-member-card" key={member.id}>
+          <img
+            src={member.imageUrl}
+            alt={member.name}
+            className="team-image"
+          />
+
+          <div className="team-content">
+            <h3 className="team-name">{member.name}</h3>
+            <p className="team-role">{member.role}</p>
+
+            <div className="team-links">
+              {member.email && (
+                <a
+                  href={`mailto:${member.email}`}
+                  className="team-link email"
+                  aria-label="Email"
+                />
+              )}
+              {member.linkedin && (
+                <a
+                  href={member.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="team-link linkedin"
+                  aria-label="LinkedIn"
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+
 
     </>
   );
