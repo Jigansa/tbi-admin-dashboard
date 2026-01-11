@@ -715,10 +715,17 @@ body {
   border-radius: 30px;
   align-items: center;
   max-width: 600px;
+  margin: 0 auto; 
 }
 
 .team-head-card .team-image {
-  height: 400px;
+  width: 320px;
+  aspect-ratio: 1 / 1;   /* ✅ forces perfect square */
+  height: auto;          /* ✅ removes oval stretching */
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto;
+  display: block;
 }
 
 .team-slider {
@@ -733,6 +740,14 @@ body {
   flex: 0 0 calc(33.333% - 18px);
   scroll-snap-align: start;
   text-align: center;
+
+}
+.team-member-card .team-image {
+  aspect-ratio: 1 / 1;   /* perfect square */
+  height: auto;          /* prevent stretching */
+  border-radius: 50%;    /* make it circular */
+  max-width: 240px;      /* nice avatar size */
+  margin: 0 auto;        /* center inside card */
 }
 
 .team-image {
@@ -810,6 +825,7 @@ body {
 @media (max-width: 900px) {
   .team-head-card {
     grid-template-columns: 1fr;
+    margin: 0 auto; 
     padding: 30px;
   }
 

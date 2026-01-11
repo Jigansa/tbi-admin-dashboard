@@ -157,86 +157,100 @@ function About() {
         </div>
       </section>
 
-    {/* =============================
+      {/* =============================
     TEAM GRID (FIREBASE)
    ============================= */}
-<section className="team-section">
-  <div className="team-grid">
 
-    {/* HEAD CARD */}
-    {coreTeam[0] && (
-      <div className="team-card team-head-card">
-        <img
-          src="https://via.placeholder.com/400/cccccc/ffffff?text=Profile"
-          alt={coreTeam[0].name}
-          className="team-image"
-        />
+{(() => {
+  const headMember = coreTeam.find(m => m.type === "head");
+  const otherMembers = coreTeam.filter(m => m.type !== "head");
 
-        <div className="team-content">
-          <h3 className="team-name">{coreTeam[0].name}</h3>
-          <p className="team-role">{coreTeam[0].role}</p>
+  return (
+    <section className="team-section">
+      <div className="team-grid">
 
-          <div className="team-links">
-            {coreTeam[0].email && (
-              <a
-                href={`mailto:${coreTeam[0].email}`}
-                className="team-link email"
-                aria-label="Email"
-              />
-            )}
-            {coreTeam[0].linkedin && (
-              <a
-                href={coreTeam[0].linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="team-link linkedin"
-                aria-label="LinkedIn"
-              />
-            )}
-          </div>
-        </div>
-      </div>
-    )}
+        {/* HEAD CARD */}
+        {headMember && (
+          <div className="team-card team-head-card">
+            <img
+              src="https://tbi.geu.ac.in/NPI.png"
+              alt={headMember.name}
+              className="team-image"
+            />
 
-    {/* SLIDING MEMBERS (3 AT A TIME) */}
-    <div className="team-slider">
-      {coreTeam.slice(1).map(member => (
-        <div className="team-card team-member-card" key={member.id}>
-          <img
-            src="https://via.placeholder.com/320/cccccc/ffffff?text=Profile"
-            alt={member.name}
-            className="team-image"
-          />
+            <div className="team-content">
+              <h3 className="team-name">{headMember.name}</h3>
+              <p className="team-role">{headMember.role}</p>
 
-          <div className="team-content">
-            <h3 className="team-name">{member.name}</h3>
-            <p className="team-role">{member.role}</p>
-
-            <div className="team-links">
-              {member.email && (
-                <a
-                  href={`mailto:${member.email}`}
-                  className="team-link email"
-                  aria-label="Email"
-                />
-              )}
-              {member.linkedin && (
-                <a
-                  href={member.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="team-link linkedin"
-                  aria-label="LinkedIn"
-                />
-              )}
+              <div className="team-links">
+                {headMember.email && (
+                  <a
+                    href={`mailto:${headMember.email}`}
+                    className="team-link email"
+                    aria-label="Email"
+                  />
+                )}
+                {headMember.linkedin && (
+                  <a
+                    href={headMember.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="team-link linkedin"
+                    aria-label="LinkedIn"
+                  />
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-    </div>
+        )}
 
-  </div>
-</section>
+        {/* SLIDING MEMBERS (3 AT A TIME) */}
+        <div className="team-slider">
+          {otherMembers.map(member => (
+            <div className="team-card team-member-card" key={member.id}>
+              <img
+                src="https://tbi.geu.ac.in/NPI.png"
+                alt={member.name}
+                className="team-image"
+              />
+
+              <div className="team-content">
+                <h3 className="team-name">{member.name}</h3>
+                <p className="team-role">{member.role}</p>
+
+                <div className="team-links">
+                  {member.email && (
+                    <a
+                      href={`mailto:${member.email}`}
+                      className="team-link email"
+                      aria-label="Email"
+                    />
+                  )}
+                  {member.linkedin && (
+                    <a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="team-link linkedin"
+                      aria-label="LinkedIn"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </section>
+  );
+})()}
+<section className="about-section-divider">
+        <div className="about-section-divider-inner">
+          <h2 className="about-section-title">Team Mavericks</h2>
+          <div className="about-section-line"></div>
+        </div>
+      </section>
 
 
 
