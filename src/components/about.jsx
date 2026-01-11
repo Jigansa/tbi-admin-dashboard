@@ -167,7 +167,7 @@ function About() {
     {coreTeam[0] && (
       <div className="team-card team-head-card">
         <img
-          src={coreTeam[0].imageUrl}
+          src="https://via.placeholder.com/400/cccccc/ffffff?text=Profile"
           alt={coreTeam[0].name}
           className="team-image"
         />
@@ -203,7 +203,7 @@ function About() {
       {coreTeam.slice(1).map(member => (
         <div className="team-card team-member-card" key={member.id}>
           <img
-            src={member.imageUrl}
+            src="https://via.placeholder.com/320/cccccc/ffffff?text=Profile"
             alt={member.name}
             className="team-image"
           />

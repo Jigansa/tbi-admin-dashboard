@@ -1,45 +1,138 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { db } from "../firebase";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 
 const Dashboard = () => {
-  const [team, setTeam] = useState(() => {
-    const saved = localStorage.getItem("team");
-    return saved ? JSON.parse(saved) : [];
+  const [team, setTeam] = useState([]);
+  const [editing, setEditing] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+  const [form, setForm] = useState({
+    name: "",
+    title: "",
+    gmail: "",
+    linkedin: "",
   });
 
-  const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ name: "", title: "", photo: "", gmail: "", linkedin: "" });
-  const saveTeam = (newTeam) => {
-    setTeam(newTeam);
-    localStorage.setItem("team", JSON.stringify(newTeam));
-  };
+  /* =============================
+     FETCH TEAM FROM FIRESTORE
+     ============================= */
+  useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "coreteam"));
+        const data = snapshot.docs.map((d) => ({
+          id: d.id,
+          ...d.data(),
+        }));
+        setTeam(data);
+      } catch (err) {
+        console.error("Dashboard error: Failed to fetch team", err);
+      }
+    };
+    fetchTeam();
+  }, []);
 
-  const handleSubmit = (e) => {
+
+  /* =============================
+     CREATE / UPDATE
+     ============================= */
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (editing) {
-      saveTeam(team.map(m => (m.id === editing ? { ...m, ...form } : m)));
-      setEditing(null);
-    } else {
-      saveTeam([...team, { ...form, id: Date.now() }]);
+    setLoading(true);
+    setMessage({ type: "", text: "" });
+
+    try {
+      // Validate required fields
+      if (!form.name.trim() || !form.title.trim() || !form.gmail.trim() || !form.linkedin.trim()) {
+        setMessage({ type: "error", text: "Please fill in all required fields" });
+        setLoading(false);
+        return;
+      }
+
+      // ============================================
+      // STORE IN FIRESTORE (No image upload - using hardcoded dummy image)
+      // ============================================
+      const payload = {
+        name: form.name.trim(),
+        role: form.title.trim(),
+        email: form.gmail.trim(),
+        linkedin: form.linkedin.trim(),
+        updatedAt: new Date(),
+      };
+
+      console.log("Saving to Firestore...", payload);
+
+      if (editing !== null) {
+        await updateDoc(doc(db, "coreteam", editing), payload);
+        console.log("Document updated successfully");
+        setMessage({ type: "success", text: "Team member updated successfully!" });
+        setEditing(null);
+      } else {
+        await addDoc(collection(db, "coreteam"), {
+          ...payload,
+          createdAt: new Date(),
+        });
+        console.log("Document added successfully");
+        setMessage({ type: "success", text: "Team member added successfully!" });
+      }
+
+      // Reset form
+      setForm({ name: "", title: "", gmail: "", linkedin: "" });
+      
+      // Reset file input
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput) fileInput.value = "";
+
+      // Refresh team list
+      console.log("Refreshing team list...");
+      const snapshot = await getDocs(collection(db, "coreteam"));
+      setTeam(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+      console.log("Team list refreshed");
+
+      // Clear message after 3 seconds
+      setTimeout(() => setMessage({ type: "", text: "" }), 3000);
+    } catch (err) {
+      console.error("Dashboard error: Failed to save team member", err);
+      setMessage({ type: "error", text: `Failed to save: ${err.message || "Unknown error. Check console for details."}` });
+    } finally {
+      console.log("Setting loading to false");
+      setLoading(false);
     }
-    setForm({ name: "", title: "", photo: "", gmail: "", linkedin: "" });
   };
 
+  /* =============================
+     EDIT
+     ============================= */
   const handleEdit = (m) => {
     setEditing(m.id);
-    setForm({ name: m.name, title: m.title, photo: m.photo, gmail: m.gmail || "", linkedin: m.linkedin || "" });
+    setForm({
+      name: m.name,
+      title: m.role,
+      gmail: m.email,
+      linkedin: m.linkedin,
+    });
   };
 
-  const handleDelete = (id) => {
-    saveTeam(team.filter(m => m.id !== id));
+  /* =============================
+     DELETE
+     ============================= */
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, "coreteam", id));
+      setTeam(team.filter((m) => m.id !== id));
+    } catch (err) {
+      console.error("Dashboard error: Failed to delete team member", err);
+    }
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => setForm({ ...form, photo: reader.result });
-    reader.readAsDataURL(file);
-  };
 
   return (
     <>
@@ -211,11 +304,37 @@ const Dashboard = () => {
           background: #fff !important;
           cursor: pointer !important;
           transition: 0.2s !important;
+          color: #e31e24 !important;
         }
 
         .item-actions button:hover {
           border-color: #e31e24 !important;
           color: #e31e24 !important;
+        }
+
+        .message-alert {
+          padding: 15px 20px !important;
+          border-radius: 12px !important;
+          margin-bottom: 20px !important;
+          font-weight: 600 !important;
+          text-align: center !important;
+        }
+
+        .message-alert.success {
+          background: #d4edda !important;
+          color: #155724 !important;
+          border: 1px solid #c3e6cb !important;
+        }
+
+        .message-alert.error {
+          background: #f8d7da !important;
+          color: #721c24 !important;
+          border: 1px solid #f5c6cb !important;
+        }
+
+        .confirm-action-btn:disabled {
+          opacity: 0.6 !important;
+          cursor: not-allowed !important;
         }
       `}</style>
 
@@ -227,87 +346,88 @@ const Dashboard = () => {
           </header>
 
           <section className="management-card">
-            <span className="section-tag">{editing ? "Modify Member" : "Add New Member"}</span>
+            <span className="section-tag">
+              {editing !== null ? "Modify Member" : "Add New Member"}
+            </span>
+
+            {message.text && (
+              <div className={`message-alert ${message.type}`}>
+                {message.text}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit}>
               <div className="form-grid-layout">
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', color: '#333' }}>Name</label>
-                  <input
-                    className="styled-input"
-                    placeholder="e.g. Ajay Sharma"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    required
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', color: '#333' }}>Professional Title</label>
-                  <input
-                    className="styled-input"
-                    placeholder="e.g. CEO & Founder"
-                    value={form.title}
-                    onChange={(e) => setForm({ ...form, title: e.target.value })}
-                    required
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', color: '#333' }}>Gmail</label>
-                  <input
-                    className="styled-input"
-                    placeholder="e.g. ajay.sharma@example.com"
-                    value={form.gmail}
-                    onChange={(e) => setForm({ ...form, gmail: e.target.value })}
-                    required
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', fontWeight: '700', color: '#333' }}>LinkedIn Link</label>
-                  <input
-                    className="styled-input"
-                    placeholder="e.g. https://linkedin.com/in/ajaysharma"
-                    value={form.linkedin}
-                    onChange={(e) => setForm({ ...form, linkedin: e.target.value })}
-                    required
-                  />
-                </div>
+                <input
+                  className="styled-input"
+                  placeholder="Name"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
+                />
+                <input
+                  className="styled-input"
+                  placeholder="Professional Title"
+                  value={form.title}
+                  onChange={(e) => setForm({ ...form, title: e.target.value })}
+                  required
+                />
+                <input
+                  className="styled-input"
+                  placeholder="Gmail"
+                  value={form.gmail}
+                  onChange={(e) => setForm({ ...form, gmail: e.target.value })}
+                  required
+                />
+                <input
+                  className="styled-input"
+                  placeholder="LinkedIn"
+                  value={form.linkedin}
+                  onChange={(e) => setForm({ ...form, linkedin: e.target.value })}
+                  required
+                />
               </div>
 
-              <div className="upload-container">
-                <label className="upload-label">Upload Profile Image</label>
-                <div className="file-preview-area">
-                  <input type="file" accept="image/*" onChange={handleFileChange} />
-                  {form.photo && <img src={form.photo} alt="preview" className="avatar-preview" />}
-                </div>
-              </div>
-
-              <button className="confirm-action-btn" type="submit">
-                {editing ? "COMMIT CHANGES" : "CONFIRM ENROLLMENT"}
+              <button 
+                className="confirm-action-btn" 
+                type="submit"
+                disabled={loading}
+              >
+                {loading 
+                  ? "PROCESSING..." 
+                  : editing !== null 
+                    ? "COMMIT CHANGES" 
+                    : "CONFIRM ENROLLMENT"
+                }
               </button>
             </form>
           </section>
 
           <section className="management-card">
             <span className="section-tag">Current Registry</span>
+
             {team.length === 0 ? (
-              <p style={{ textAlign: "center", color: "#999", padding: "30px" }}>No members found in the local database.</p>
+              <p style={{ textAlign: "center", color: "#999", padding: "30px" }}>
+                No team members found. Add your first member above.
+              </p>
             ) : (
-              <div>
-                {team.map(m => (
-                  <div key={m.id} className="registry-item">
-                    <div className="item-identity">
-                      <img src={m.photo || 'https://via.placeholder.com/150'} alt="" />
-                      <div>
-                        <strong>{m.name}</strong><br />
-                        <span>{m.title}</span>
-                      </div>
-                    </div>
-                    <div className="item-actions">
-                      <button onClick={() => handleEdit(m)}>Modify</button>
-                      <button onClick={() => handleDelete(m.id)}>Remove</button>
-                    </div>
+              team.map((m) => (
+              <div key={m.id} className="registry-item">
+                <div className="item-identity">
+                  <img src="https://via.placeholder.com/150/cccccc/ffffff?text=Profile" alt="" />
+                  <div>
+                    <strong>{m.name}</strong>
+                    <br />
+                    <span>{m.role}</span>
                   </div>
-                ))}
+                </div>
+
+                <div className="item-actions">
+                  <button onClick={() => handleEdit(m)}>Modify</button>
+                  <button onClick={() => handleDelete(m.id)}>Remove</button>
+                </div>
               </div>
+              ))
             )}
           </section>
         </div>
