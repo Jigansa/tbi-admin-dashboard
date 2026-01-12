@@ -10,6 +10,17 @@ import {
 } from "firebase/firestore";
 
 const Dashboard = () => {
+  const MAVERICK_CATEGORIES = {
+    1: "Design & Creative",
+    2: "Media & Video Production",
+    3: "Operations & Administration",
+    4: "Business Development & Programs",
+    5: "Community & Engagement",
+    6: "Events & Logistics",
+    7: "Talent & HR Support",
+    8: "Technical"
+  };
+  
   const [team, setTeam] = useState([]);
   const [editing, setEditing] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -20,6 +31,24 @@ const Dashboard = () => {
     gmail: "",
     linkedin: "",
   });
+  const [mavericks, setMavericks] = useState([]);
+  const [mavEditing, setMavEditing] = useState(null);
+  const [mavForm, setMavForm] = useState({
+    name: "",
+    role: "",
+    email: "",
+    linkedin: "",
+    category: ""
+  });
+  const [mentors, setMentors] = useState([]);
+  const [mentorEditing, setMentorEditing] = useState(null);
+  const [mentorForm, setMentorForm] = useState({
+    name: "",
+    designation: "",
+    mail: "",
+    linkedin: ""
+  });
+
 
   /* =============================
      FETCH TEAM FROM FIRESTORE
@@ -38,6 +67,22 @@ const Dashboard = () => {
       }
     };
     fetchTeam();
+
+    // FETCH TEAM MAVERICKS
+    const fetchMavericks = async () => {
+      const snap = await getDocs(collection(db, "teamMavericks"));
+      setMavericks(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    };
+
+    fetchMavericks();
+
+    // FETCH MENTORS
+    const fetchMentors = async () => {
+      const snap = await getDocs(collection(db, "mentors"));
+      setMentors(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    };
+
+    fetchMentors();
   }, []);
 
 
@@ -130,6 +175,146 @@ const Dashboard = () => {
       setTeam(team.filter((m) => m.id !== id));
     } catch (err) {
       console.error("Dashboard error: Failed to delete team member", err);
+    }
+  };
+
+  /* =============================
+     MAVERICK SUBMIT
+     ============================= */
+  const handleMaverickSubmit = async (e) => {
+    e.preventDefault();
+
+    if (
+      !mavForm.name ||
+      !mavForm.role ||
+      !mavForm.email ||
+      !mavForm.linkedin ||
+      !mavForm.category
+    ) {
+      alert("Fill all Maverick fields");
+      return;
+    }
+
+    const payload = {
+      name: mavForm.name.trim(),
+      role: mavForm.role.trim(),
+      email: mavForm.email.trim(),
+      linkedin: mavForm.linkedin.trim(),
+      category: Number(mavForm.category),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    if (mavEditing) {
+      await updateDoc(doc(db, "teamMavericks", mavEditing), payload);
+      setMavEditing(null);
+    } else {
+      await addDoc(collection(db, "teamMavericks"), payload);
+    }
+
+    setMavForm({
+      name: "",
+      role: "",
+      email: "",
+      linkedin: "",
+      category: ""
+    });
+
+    const snap = await getDocs(collection(db, "teamMavericks"));
+    setMavericks(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+  };
+
+  /* =============================
+     MAVERICK EDIT
+     ============================= */
+  const handleMaverickEdit = (m) => {
+    setMavEditing(m.id);
+    setMavForm({
+      name: m.name,
+      role: m.role,
+      email: m.email,
+      linkedin: m.linkedin,
+      category: String(m.category)
+    });
+  };
+
+  /* =============================
+     MAVERICK DELETE
+     ============================= */
+  const handleMaverickDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, "teamMavericks", id));
+      setMavericks(mavericks.filter((m) => m.id !== id));
+    } catch (err) {
+      console.error("Dashboard error: Failed to delete maverick", err);
+    }
+  };
+
+  /* =============================
+     MENTOR SUBMIT
+     ============================= */
+  const handleMentorSubmit = async (e) => {
+    e.preventDefault();
+
+    if (
+      !mentorForm.name ||
+      !mentorForm.designation ||
+      !mentorForm.mail ||
+      !mentorForm.linkedin
+    ) {
+      alert("Fill all Mentor fields");
+      return;
+    }
+
+    const payload = {
+      name: mentorForm.name.trim(),
+      designation: mentorForm.designation.trim(),
+      mail: mentorForm.mail.trim(),
+      linkedin: mentorForm.linkedin.trim(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    if (mentorEditing) {
+      await updateDoc(doc(db, "mentors", mentorEditing), payload);
+      setMentorEditing(null);
+    } else {
+      await addDoc(collection(db, "mentors"), payload);
+    }
+
+    setMentorForm({
+      name: "",
+      designation: "",
+      mail: "",
+      linkedin: ""
+    });
+
+    const snap = await getDocs(collection(db, "mentors"));
+    setMentors(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+  };
+
+  /* =============================
+     MENTOR EDIT
+     ============================= */
+  const handleMentorEdit = (m) => {
+    setMentorEditing(m.id);
+    setMentorForm({
+      name: m.name,
+      designation: m.designation,
+      mail: m.mail,
+      linkedin: m.linkedin
+    });
+  };
+
+  /* =============================
+     MENTOR DELETE
+     ============================= */
+  const handleMentorDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, "mentors", id));
+      setMentors(mentors.filter((m) => m.id !== id));
+    } catch (err) {
+      console.error("Dashboard error: Failed to delete mentor", err);
     }
   };
 
@@ -427,6 +612,175 @@ const Dashboard = () => {
                   <button onClick={() => handleDelete(m.id)}>Remove</button>
                 </div>
               </div>
+              ))
+            )}
+          </section>
+
+          {/* ============================= 
+              TEAM MAVERICKS SECTION 
+              ============================= */}
+          <section className="management-card">
+            <span className="section-tag">
+              {mavEditing ? "Modify Team Maverick" : "Add Team Maverick"}
+            </span>
+
+            <form onSubmit={handleMaverickSubmit}>
+              <div className="form-grid-layout">
+                <input
+                  className="styled-input"
+                  placeholder="Name"
+                  value={mavForm.name}
+                  onChange={(e) => setMavForm({ ...mavForm, name: e.target.value })}
+                  required
+                />
+
+                <input
+                  className="styled-input"
+                  placeholder="Role"
+                  value={mavForm.role}
+                  onChange={(e) => setMavForm({ ...mavForm, role: e.target.value })}
+                  required
+                />
+
+                <input
+                  className="styled-input"
+                  placeholder="Email"
+                  value={mavForm.email}
+                  onChange={(e) => setMavForm({ ...mavForm, email: e.target.value })}
+                  required
+                />
+
+                <input
+                  className="styled-input"
+                  placeholder="LinkedIn"
+                  value={mavForm.linkedin}
+                  onChange={(e) => setMavForm({ ...mavForm, linkedin: e.target.value })}
+                  required
+                />
+
+                <select
+                  className="styled-input"
+                  value={mavForm.category}
+                  onChange={(e) => setMavForm({ ...mavForm, category: e.target.value })}
+                  required
+                >
+                  <option value="">Select Category</option>
+                  {Object.entries(MAVERICK_CATEGORIES).map(([id, label]) => (
+                    <option key={id} value={id}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <button className="confirm-action-btn" type="submit">
+                {mavEditing ? "UPDATE MAVERICK" : "ADD MAVERICK"}
+              </button>
+            </form>
+          </section>
+
+          <section className="management-card">
+            <span className="section-tag">Team Mavericks Registry</span>
+
+            {mavericks.length === 0 ? (
+              <p style={{ textAlign: "center", color: "#999", padding: "30px" }}>
+                No team mavericks found. Add your first maverick above.
+              </p>
+            ) : (
+              mavericks.map((m) => (
+                <div key={m.id} className="registry-item">
+                  <div className="item-identity">
+                    <img src="https://via.placeholder.com/150/cccccc/ffffff?text=Profile" alt="" />
+                    <div>
+                      <strong>{m.name}</strong>
+                      <br />
+                      <span>{m.role} • {MAVERICK_CATEGORIES[m.category]}</span>
+                    </div>
+                  </div>
+
+                  <div className="item-actions">
+                    <button onClick={() => handleMaverickEdit(m)}>Modify</button>
+                    <button onClick={() => handleMaverickDelete(m.id)}>Remove</button>
+                  </div>
+                </div>
+              ))
+            )}
+          </section>
+
+          {/* ============================= 
+              MENTORS SECTION 
+              ============================= */}
+          <section className="management-card">
+            <span className="section-tag">
+              {mentorEditing ? "Modify Mentor" : "Add Mentor"}
+            </span>
+
+            <form onSubmit={handleMentorSubmit}>
+              <div className="form-grid-layout">
+                <input
+                  className="styled-input"
+                  placeholder="Name"
+                  value={mentorForm.name}
+                  onChange={(e) => setMentorForm({ ...mentorForm, name: e.target.value })}
+                  required
+                />
+
+                <input
+                  className="styled-input"
+                  placeholder="Designation"
+                  value={mentorForm.designation}
+                  onChange={(e) => setMentorForm({ ...mentorForm, designation: e.target.value })}
+                  required
+                />
+
+                <input
+                  className="styled-input"
+                  placeholder="Email"
+                  type="email"
+                  value={mentorForm.mail}
+                  onChange={(e) => setMentorForm({ ...mentorForm, mail: e.target.value })}
+                  required
+                />
+
+                <input
+                  className="styled-input"
+                  placeholder="LinkedIn"
+                  value={mentorForm.linkedin}
+                  onChange={(e) => setMentorForm({ ...mentorForm, linkedin: e.target.value })}
+                  required
+                />
+              </div>
+
+              <button className="confirm-action-btn" type="submit">
+                {mentorEditing ? "UPDATE MENTOR" : "ADD MENTOR"}
+              </button>
+            </form>
+          </section>
+
+          <section className="management-card">
+            <span className="section-tag">Mentors Registry</span>
+
+            {mentors.length === 0 ? (
+              <p style={{ textAlign: "center", color: "#999", padding: "30px" }}>
+                No mentors found. Add your first mentor above.
+              </p>
+            ) : (
+              mentors.map((m) => (
+                <div key={m.id} className="registry-item">
+                  <div className="item-identity">
+                    <img src="https://via.placeholder.com/150/cccccc/ffffff?text=Profile" alt="" />
+                    <div>
+                      <strong>{m.name}</strong>
+                      <br />
+                      <span>{m.designation}</span>
+                    </div>
+                  </div>
+
+                  <div className="item-actions">
+                    <button onClick={() => handleMentorEdit(m)}>Modify</button>
+                    <button onClick={() => handleMentorDelete(m.id)}>Remove</button>
+                  </div>
+                </div>
               ))
             )}
           </section>

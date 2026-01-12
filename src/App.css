@@ -678,7 +678,6 @@ body {
 }
 
 .DELETE-BTN:hover { color: #e31e24 !important; border-color: #e31e24 !important; }
-
 .team-section {
   padding: 20px 5% 90px;
   background: #fff;
@@ -689,7 +688,6 @@ body {
   flex-direction: column;
   gap: 20px;
 }
-
 
 @keyframes fadeUp {
   from {
@@ -720,8 +718,8 @@ body {
 
 .team-head-card .team-image {
   width: 320px;
-  aspect-ratio: 1 / 1;   /* ✅ forces perfect square */
-  height: auto;          /* ✅ removes oval stretching */
+  aspect-ratio: 1 / 1;
+  height: auto;
   border-radius: 50%;
   object-fit: cover;
   margin: 0 auto;
@@ -740,14 +738,24 @@ body {
   flex: 0 0 calc(33.333% - 18px);
   scroll-snap-align: start;
   text-align: center;
-
+  /* ✅ Added card styling */
+  background: #f9f9f9;
+  border-radius: 30px;
+  padding: 30px 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.team-member-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
 .team-member-card .team-image {
-  aspect-ratio: 1 / 1;   /* perfect square */
-  height: auto;          /* prevent stretching */
-  border-radius: 50%;    /* make it circular */
-  max-width: 240px;      /* nice avatar size */
-  margin: 0 auto;        /* center inside card */
+  aspect-ratio: 1 / 1;
+  height: auto;
+  border-radius: 50%;
+  max-width: 240px;
+  margin: 0 auto;
 }
 
 .team-image {
@@ -837,3 +845,354 @@ body {
     flex: 0 0 80%;
   }
 }
+
+/* =============================
+   TEAM MAVERICKS SECTION
+   ============================= */
+
+   .mavericks-section {
+    padding: 40px 5% 90px;
+    background: #fff;
+  }
+  
+  /* CATEGORY FILTERS */
+  .mavericks-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 50px;
+    padding: 0 20px;
+  }
+  
+  .mav-filter-btn {
+    padding: 12px 24px;
+    background: #f5f5f5;
+    border: 2px solid transparent;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .mav-filter-btn:hover {
+    background: #e31e24;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+  
+  .mav-filter-btn.active {
+    background: #e31e24;
+    color: #fff;
+    border-color: #e31e24;
+  }
+  
+  /* MAVERICKS GRID - 4 CARDS PER ROW */
+  .mavericks-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  /* MAVERICK CARD */
+  .mav-card {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 20px;
+    padding: 30px 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+  
+  .mav-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: #e31e24;
+  }
+  
+  /* AVATAR CIRCLE WITH INITIALS */
+  .mav-avatar {
+    width: 80px;
+    height: 80px;
+    background: #f0f0f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #666;
+    margin: 0 auto 20px;
+    transition: all 0.3s ease;
+  }
+  
+  .mav-card:hover .mav-avatar {
+    background: #e31e24;
+    color: #fff;
+  }
+  
+  /* NAME & ROLE */
+  .mav-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 8px;
+  }
+  
+  .mav-role {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  
+  /* LINKS (EMAIL + LINKEDIN) */
+  .mav-links {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  
+  .mav-link {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  .mav-link:hover {
+    background: #e31e24;
+    transform: translateY(-3px);
+  }
+  
+  .mav-link.email::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    background: url("data:image/svg+xml,%3Csvg fill='none' stroke='%23333' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 4h16v16H4z'/%3E%3Cpath d='M22 6L12 13 2 6'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    transition: filter 0.3s ease;
+  }
+  
+  .mav-link.linkedin::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    background: url("data:image/svg+xml,%3Csvg fill='%23333' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.98 3.5C4.98 4.88 3.86 6 2.49 6S0 4.88 0 3.5 1.12 1 2.49 1s2.49 1.12 2.49 2.5zM.22 8.99h4.54V24H.22zM7.98 8.99h4.36v2.05h.06c.61-1.16 2.1-2.39 4.32-2.39 4.62 0 5.47 3.04 5.47 6.99V24h-4.54v-6.99c0-1.67-.03-3.82-2.33-3.82-2.34 0-2.7 1.82-2.7 3.7V24H7.98z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    transition: filter 0.3s ease;
+  }
+  
+  .mav-link:hover::before {
+    filter: invert(1);
+  }
+  
+  /* EMPTY STATE */
+  .mav-empty-state {
+    text-align: center;
+    color: #999;
+    font-size: 16px;
+    padding: 60px 20px;
+    grid-column: 1 / -1;
+  }
+  
+  /* RESPONSIVE */
+  @media (max-width: 1200px) {
+    .mavericks-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (max-width: 900px) {
+    .mavericks-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .mavericks-filters {
+      gap: 8px;
+    }
+    
+    .mav-filter-btn {
+      padding: 10px 18px;
+      font-size: 13px;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .mavericks-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+/* =============================
+   MENTORS NETWORK SECTION
+   ============================= */
+
+   .mentors-section {
+    padding: 40px 5% 90px;
+    background: #fff;
+  }
+  
+  /* MENTORS GRID - 2 CARDS PER ROW */
+  .mentors-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  /* MENTOR CARD - HORIZONTAL LAYOUT */
+  .mentor-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 20px;
+    padding: 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    gap: 30px;
+  }
+  
+  .mentor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: #e31e24;
+  }
+  
+  /* LEFT SIDE - AVATAR CIRCLE */
+  .mentor-left {
+    flex-shrink: 0;
+  }
+  
+  .mentor-avatar-circle {
+    width: 120px;
+    height: 120px;
+    background: #f0f0f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #666;
+    transition: all 0.3s ease;
+  }
+  
+  .mentor-card:hover .mentor-avatar-circle {
+    background: #e31e24;
+    color: #fff;
+  }
+  
+  /* RIGHT SIDE - TEXT CONTENT */
+  .mentor-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .mentor-name {
+    font-size: 22px;
+    font-weight: 600;
+    color: #111;
+    margin: 0;
+  }
+  
+  .mentor-designation {
+    font-size: 16px;
+    color: #666;
+    margin: 0 0 12px 0;
+  }
+  
+  /* MENTOR LINKS */
+  .mentor-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  
+  .mentor-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  .mentor-link:hover {
+    background: #e31e24;
+    transform: translateY(-3px);
+  }
+  
+  .mentor-link.email::before {
+    content: "";
+    width: 18px;
+    height: 18px;
+    background: url("data:image/svg+xml,%3Csvg fill='none' stroke='%23333' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 4h16v16H4z'/%3E%3Cpath d='M22 6L12 13 2 6'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    transition: filter 0.3s ease;
+  }
+  
+  .mentor-link.linkedin::before {
+    content: "";
+    width: 18px;
+    height: 18px;
+    background: url("data:image/svg+xml,%3Csvg fill='%23333' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.98 3.5C4.98 4.88 3.86 6 2.49 6S0 4.88 0 3.5 1.12 1 2.49 1s2.49 1.12 2.49 2.5zM.22 8.99h4.54V24H.22zM7.98 8.99h4.36v2.05h.06c.61-1.16 2.1-2.39 4.32-2.39 4.62 0 5.47 3.04 5.47 6.99V24h-4.54v-6.99c0-1.67-.03-3.82-2.33-3.82-2.34 0-2.7 1.82-2.7 3.7V24H7.98z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    transition: filter 0.3s ease;
+  }
+  
+  .mentor-link:hover::before {
+    filter: invert(1);
+  }
+  
+  /* EMPTY STATE */
+  .mentor-empty-state {
+    text-align: center;
+    color: #999;
+    font-size: 16px;
+    padding: 60px 20px;
+    grid-column: 1 / -1;
+  }
+  
+  /* RESPONSIVE */
+  @media (max-width: 1200px) {
+    .mentors-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .mentor-card {
+      flex-direction: column;
+      text-align: center;
+      padding: 30px 20px;
+    }
+  
+    .mentor-avatar-circle {
+      width: 100px;
+      height: 100px;
+      font-size: 28px;
+    }
+  
+    .mentor-links {
+      justify-content: center;
+    }
+  }
